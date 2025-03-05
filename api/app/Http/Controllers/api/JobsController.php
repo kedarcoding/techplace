@@ -15,11 +15,11 @@ class JobsController extends Controller
     public function index(Request $request) {
        $search = $request->query('search');
        $query=RequirementJob::query();
-       if ($search) {
-        $query->where('job_title', 'like', "%{$search}%");
-        } 
-       $jobs= $query->where(['status'=>1])->paginate();
-       if(!$jobs){
+    //    if (!empty($search)) {
+    //     $query->where('job_title', 'like', "%{$search}%");
+    //     } 
+       $jobs= $query->with('recruiter:id,company_name')->paginate(10);
+       if(!empty($jobs)){
         return response()->json([$jobs],200);
        }
        return response()->json(['message'=>'No data'],200);
